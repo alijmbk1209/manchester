@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E0C10">
+<meta property="og:title" content="رسالة سرّية">
+<meta property="og:description" content="سرّي للغاية — لا تُفتح إلا من صاحبها">
+<title>رسالة من سفاح مانشستر</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@700&family=Tajawal:wght@400;700&display=swap">
+<style>
+/* Layout: one phone screen — a sealed envelope on a dark desk; tapping the seal opens it into a full letter with the poem and a link to the book. Single deliberate dark look. */
+:root{
+  --desk:#0E0C10; --desk-glow:#2A1418; --kraft:#C9A56C; --kraft-dark:#B48E55; --kraft-flap:#BE9A62;
+  --paper:#EFE4CA; --paper-edge:#D4C097; --ink:#1E1A17; --blood:#9E1F24; --seal:#A3262B;
+  --gold:#C9A24A; --muted:#9D9384; --text:#EFE7D6;
+  --display:'Aref Ruqaa','Amiri','Times New Roman',serif;
+  --poem:'Amiri','Traditional Arabic','Times New Roman',serif;
+  --ui:'Tajawal',Tahoma,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{margin:0;background:radial-gradient(circle at 50% 35%,var(--desk-glow) 0%,var(--desk) 70%) fixed,var(--desk);color:var(--text);font-family:var(--ui);direction:rtl;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 40px;
+  display:flex;flex-direction:column;align-items:center;-webkit-tap-highlight-color:transparent}
+
+/* ---------- closed envelope ---------- */
+.scene{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;min-height:calc(100vh - 64px);transition:opacity .6s ease}
+.kicker{margin:0;font-size:14px;letter-spacing:3px;color:var(--gold);text-align:center}
+.env{position:relative;width:min(88vw,420px);max-width:100%;aspect-ratio:3/2;perspective:1000px}
+.back{position:absolute;inset:0;background:var(--kraft-dark);border-radius:6px;box-shadow:0 24px 60px rgba(0,0,0,.65)}
+.peek{position:absolute;left:7%;right:7%;top:7%;height:82%;background:linear-gradient(var(--paper),var(--paper-edge));border-radius:3px;z-index:2;transition:transform .9s cubic-bezier(.2,.8,.2,1) .75s;display:flex;align-items:flex-start;justify-content:center;padding-top:8%}
+.peek span{font-family:var(--display);color:var(--blood);font-size:clamp(18px,5vw,24px)}
+.pocket{position:absolute;inset:0;z-index:3;border-radius:6px;
+  background:radial-gradient(circle at 70% 80%,rgba(90,60,20,.18) 0 12%,transparent 13%),var(--kraft);
+  clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%)}
+.address{position:absolute;inset:auto 0 9% 0;z-index:4;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink);text-align:center;pointer-events:none}
+.address .to{font-family:var(--poem);font-weight:700;font-size:clamp(17px,4.8vw,22px);margin:0}
+.address .stamp{font-family:var(--ui);font-weight:700;font-size:clamp(12px,3.4vw,15px);color:var(--blood);border:2px solid var(--blood);padding:1px 10px;transform:rotate(-4deg);letter-spacing:1px;margin:0}
+.flap{position:absolute;left:0;right:0;top:0;height:56%;z-index:5;background:var(--kraft-flap);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;border-radius:6px 6px 0 0;
+  transition:transform .8s cubic-bezier(.4,0,.2,1),z-index 0s linear .4s}
+.seal{position:absolute;left:50%;top:56%;z-index:6;width:clamp(68px,20vw,84px);height:clamp(68px,20vw,84px);transform:translate(-50%,-50%);border:0;padding:0;background:none;cursor:pointer;border-radius:50%;
+  transition:transform .45s ease,opacity .45s ease}
+.seal svg{width:100%;height:100%;display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,.45))}
+.seal::after{content:"";position:absolute;inset:-10px;border-radius:50%;border:2px solid var(--gold);opacity:.0;animation:pulse 1.8s ease-out infinite}
+.seal:focus-visible{outline:3px solid var(--gold);outline-offset:6px}
+@keyframes pulse{0%{transform:scale(.85);opacity:.7}100%{transform:scale(1.35);opacity:0}}
+.hint{margin:0;font-size:16px;color:var(--muted);text-align:center;transition:opacity .3s}
+
+.opening .seal{transform:translate(-50%,-50%) scale(1.25) rotate(18deg);opacity:0;pointer-events:none}
+.opening .seal::after{animation:none}
+.opening .flap{transform:rotateX(180deg);z-index:1}
+.opening .peek{transform:translateY(-58%)}
+.opening .hint{opacity:0}
+.leaving{opacity:0}
+
+/* ---------- open letter ---------- */
+.reading{width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;gap:22px}
+.reading[hidden]{display:none!important}
+.letter{width:100%;color:var(--ink);border-radius:4px;padding:30px 24px 28px;position:relative;
+  background:radial-gradient(circle at 85% 10%,rgba(140,100,40,.16) 0 8%,transparent 9%),radial-gradient(ellipse at 12% 78%,rgba(120,80,30,.13) 0 12%,transparent 13%),radial-gradient(circle at 50% 40%,#F4EBD5 0%,var(--paper) 65%,var(--paper-edge) 100%);
+  box-shadow:0 24px 70px rgba(0,0,0,.7);outline:5px double #6B5A44;outline-offset:-14px;
+  display:flex;flex-direction:column;gap:18px;animation:rise .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{transform:translateY(40px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.l-to{font-family:var(--poem);font-weight:700;font-size:21px;margin:0}
+.poem{display:flex;flex-direction:column;gap:14px;text-align:center;font-family:var(--poem);font-weight:700;font-size:clamp(20px,5.6vw,25px);line-height:1.7}
+.bayt{display:flex;flex-direction:column}
+.ink{opacity:0;filter:blur(3px);animation:ink 1s ease forwards}
+@keyframes ink{to{opacity:1;filter:none}}
+.sign{font-family:var(--display);color:var(--blood);font-size:30px;margin:4px 0 0;text-align:left}
+.trail{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.trail p{margin:0;font-family:var(--poem);font-weight:700;font-size:20px;color:var(--text)}
+.cta{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:var(--ink);text-decoration:none;font-family:var(--ui);font-weight:700;font-size:18px;padding:14px 28px;border-radius:999px;box-shadow:0 8px 24px rgba(201,162,74,.25)}
+.cta:focus-visible{outline:3px solid var(--text);outline-offset:3px}
+.small{font-size:13px;color:var(--muted)}
+.again{background:none;border:0;color:var(--muted);font-family:var(--ui);font-size:13px;text-decoration:underline;cursor:pointer;padding:6px}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important;transition-delay:0s!important}
+}
+</style>
+
+</head>
+<body>
+<main class="scene" id="scene">
+  <p class="kicker">رسالة خاصة · قضية مانشستر</p>
+  <div class="env" id="env">
+    <div class="back"></div>
+    <div class="peek"><span>سفّاح مانشستر</span></div>
+    <div class="pocket"></div>
+    <div class="address">
+      <p class="stamp">سرّي للغاية</p>
+      <p class="to">إلى الأستاذ محمد المجنوني</p>
+    </div>
+    <div class="flap"></div>
+    <button class="seal" id="seal" type="button" aria-label="اكسر الختم وافتح الرسالة">
+      <svg viewBox="0 0 160 160" aria-hidden="true"><path d="M80 6 C96 10 104 4 116 14 C128 24 140 24 146 40 C152 56 158 64 152 80 C148 96 156 106 144 120 C132 134 128 146 110 150 C94 154 86 160 70 154 C54 148 42 152 30 138 C18 124 8 118 8 100 C8 84 2 74 10 58 C18 42 18 28 34 18 C50 8 62 2 80 6 Z" fill="#8E1A1F"/><circle cx="80" cy="80" r="52" fill="#A3262B"/><circle cx="80" cy="80" r="44" fill="none" stroke="#6E1216" stroke-width="3"/><path d="M48 92 C52 70 58 70 60 86 C62 70 68 70 70 86 C72 70 78 70 80 88 C84 104 100 104 108 88 C112 78 112 70 108 62" fill="none" stroke="#5A0F12" stroke-width="7" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <p class="hint">اكسر الختم… إن كنتَ تجرؤ</p>
+</main>
+
+<section class="reading" id="reading" hidden aria-live="polite">
+  <article class="letter">
+    <p class="l-to ink" style="animation-delay:.6s">إلى الأستاذ محمد المجنوني…</p>
+    <div class="poem">
+      <div class="bayt"><span class="ink" style="animation-delay:1.4s">يا مَن جلستَ تُراقبُ الأسرارا</span><span class="ink" style="animation-delay:2.2s">وظننتَ أنّكَ تعرفُ الأخبارا</span></div>
+      <div class="bayt"><span class="ink" style="animation-delay:3.2s">أنا في ضبابِ مانشستر عابرٌ</span><span class="ink" style="animation-delay:4s">أمضي وأتركُ خلفيَ الأشعارا</span></div>
+      <div class="bayt"><span class="ink" style="animation-delay:5s">خبّأتُ وجهي في سطورِ روايةٍ</span><span class="ink" style="animation-delay:5.8s">فاقرأْ… لعلّكَ تكشفُ الأستارا</span></div>
+    </div>
+    <p class="sign ink" style="animation-delay:6.8s">سفّاح مانشستر</p>
+  </article>
+  <div class="trail ink" style="animation-delay:7.8s">
+    <p>إن أردتَ أن تعرفني…</p>
+    <a class="cta" href="https://www.jarir.com/arabic-books-630069.html" target="_blank" rel="noopener">فاتبعْ هذا الأثر ←</a>
+    <span class="small">«عقل متمرد: سفاح مانشستر» · سطام العنزي</span>
+  </div>
+  <button class="again" id="again" type="button">أعد إغلاق الرسالة</button>
+</section>
+
+<script>
+(function(){
+  var scene=document.getElementById('scene'),env=document.getElementById('env'),seal=document.getElementById('seal'),
+      reading=document.getElementById('reading'),again=document.getElementById('again'),opened=false;
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function crack(){
+    try{
+      var A=window.AudioContext||window.webkitAudioContext; if(!A)return;
+      var ctx=new A(),len=Math.floor(ctx.sampleRate*.18),buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);
+      for(var i=0;i<len;i++){d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}
+      var src=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();
+      f.type='bandpass';f.frequency.value=1800;g.gain.value=.6;
+      src.buffer=buf;src.connect(f);f.connect(g);g.connect(ctx.destination);src.start();
+    }catch(e){}
+  }
+  seal.addEventListener('click',function(){
+    if(opened)return; opened=true; crack();
+    try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
+    scene.classList.add('opening');
+    setTimeout(function(){scene.classList.add('leaving')},reduce?0:1900);
+    setTimeout(function(){scene.hidden=true;reading.hidden=false;window.scrollTo(0,0)},reduce?0:2400);
+  });
+  again.addEventListener('click',function(){
+    opened=false;reading.hidden=true;scene.hidden=false;
+    scene.classList.remove('opening','leaving');
+    var c=reading.cloneNode(true);reading.parentNode.replaceChild(c,reading);reading=c;
+    again=document.getElementById('again');again.addEventListener('click',arguments.callee);
+    seal.focus();
+  });
+})();
+</script>
+
+</body>
+</html>
